@@ -1,0 +1,264 @@
+/* ========== RESET & BASE ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0a0a0f;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+
+  --neon-cyan:   #00f5ff;
+  --neon-pink:   #ff2d78;
+  --neon-purple: #bf5fff;
+  --neon-yellow: #ffe600;
+  --neon-green:  #39ff14;
+
+  --text-primary: #ffffff;
+  --text-dim:     rgba(255,255,255,0.5);
+
+  --btn-num-bg:  rgba(255,255,255,0.07);
+  --btn-func-bg: rgba(0,245,255,0.12);
+  --btn-op-bg:   rgba(255,45,120,0.18);
+  --btn-eq-bg:   linear-gradient(135deg, #ff2d78, #bf5fff);
+
+  --radius: 20px;
+  --btn-radius: 14px;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-family: 'Rajdhani', sans-serif;
+  overflow: hidden;
+}
+
+/* ========== ANIMATED BACKGROUND ORBS ========== */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: float 8s ease-in-out infinite;
+}
+.orb-1 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #ff2d78, transparent 70%);
+  top: -100px; left: -100px;
+  animation-delay: 0s;
+}
+.orb-2 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, #00f5ff, transparent 70%);
+  bottom: -80px; right: -80px;
+  animation-delay: -3s;
+}
+.orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, #bf5fff, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: -5s;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-30px) scale(1.08); }
+}
+
+/* ========== CALCULATOR SHELL ========== */
+.calculator {
+  position: relative;
+  z-index: 1;
+  width: 340px;
+  background: rgba(10, 10, 20, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 24px 20px 20px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 30px 80px rgba(0,0,0,0.7),
+    0 0 60px rgba(191,95,255,0.12);
+  animation: slideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* ========== BRAND ========== */
+.brand {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--neon-cyan);
+  text-align: center;
+  margin-bottom: 18px;
+  text-shadow: 0 0 12px var(--neon-cyan);
+}
+
+/* ========== DISPLAY ========== */
+.display {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.expression {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  color: var(--text-dim);
+  min-height: 18px;
+  word-break: break-all;
+  text-align: right;
+  letter-spacing: 1px;
+}
+
+.result {
+  font-family: 'Orbitron', monospace;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  text-align: right;
+  word-break: break-all;
+  transition: color 0.2s;
+  text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+.result.equals-flash {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 30px var(--neon-cyan);
+}
+
+/* ========== BUTTON GRID ========== */
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.btn {
+  position: relative;
+  height: 66px;
+  border: none;
+  border-radius: var(--btn-radius);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform  0.1s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+}
+
+/* ripple */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.12);
+  opacity: 0;
+  transition: opacity 0.15s;
+  border-radius: inherit;
+}
+.btn:active::after { opacity: 1; }
+.btn:active { transform: scale(0.93); }
+
+/* ── Number buttons ── */
+.btn-num {
+  background: var(--btn-num-bg);
+  border-color: rgba(255,255,255,0.06);
+}
+.btn-num:hover {
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 4px 20px rgba(255,255,255,0.06);
+}
+
+/* ── Function buttons ── */
+.btn-func {
+  background: var(--btn-func-bg);
+  color: var(--neon-cyan);
+  border-color: rgba(0,245,255,0.2);
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 700;
+}
+.btn-func:hover {
+  background: rgba(0,245,255,0.2);
+  box-shadow: 0 4px 20px rgba(0,245,255,0.2);
+}
+
+/* ── Operator buttons ── */
+.btn-operator {
+  background: var(--btn-op-bg);
+  color: var(--neon-pink);
+  border-color: rgba(255,45,120,0.25);
+  font-size: 24px;
+}
+.btn-operator:hover {
+  background: rgba(255,45,120,0.3);
+  box-shadow: 0 4px 20px rgba(255,45,120,0.3);
+}
+.btn-operator.active-op {
+  background: rgba(255,45,120,0.4);
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 20px rgba(255,45,120,0.4);
+  color: #fff;
+}
+
+/* ── Zero (wide) ── */
+.btn-zero {
+  grid-column: span 2;
+  text-align: left;
+  padding-left: 22px;
+}
+
+/* ── Equals button ── */
+.btn-equals {
+  background: var(--btn-eq-bg);
+  color: #fff;
+  font-size: 26px;
+  border-color: rgba(255,45,120,0.3);
+  box-shadow: 0 6px 24px rgba(255,45,120,0.35);
+}
+.btn-equals:hover {
+  box-shadow: 0 8px 32px rgba(255,45,120,0.55);
+  transform: scale(1.03);
+}
+.btn-equals:active {
+  transform: scale(0.95);
+}
+
+/* ========== SCROLLBAR (for expression overflow) ========== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
